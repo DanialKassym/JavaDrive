@@ -5,7 +5,7 @@ plugins {
 
 }
 
-group = "AuthService"
+group = "JavaDrive"
 version = "0.0.1-SNAPSHOT"
 
 java {
@@ -19,6 +19,7 @@ repositories {
 }
 
 dependencies {
+	implementation("org.springframework.boot:spring-boot-starter-mail")
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	//implementation("org.springframework.boot:spring-boot-starter-security")
