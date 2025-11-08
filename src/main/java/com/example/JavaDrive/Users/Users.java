@@ -1,4 +1,4 @@
-package com.example.JavaDrive.models;
+package com.example.JavaDrive.Users;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
@@ -13,10 +13,12 @@ public class Users {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private Long id;
+
     @Column(nullable = false, unique = true)
     private String username ;
     private String email;
     private String password_hash;
+
     @Column(nullable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     @CreationTimestamp
@@ -35,7 +37,6 @@ public class Users {
     public Long getId() {
         return id;
     }
-
 
     public String getUsername() {
         return username;

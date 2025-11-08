@@ -1,7 +1,6 @@
-package com.example.JavaDrive.controllers;
+package com.example.JavaDrive.Users;
 
-import com.example.JavaDrive.repository.UserRepository;
-import com.example.JavaDrive.models.Users;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,11 +14,19 @@ public class UserController {
         this.repository = repository;
     }
 
+    @GetMapping("/unsecure")
+    public ResponseEntity<String> Unsecure(){
+        return ResponseEntity.ok("you are on public");
+    }
+    @GetMapping("/secure")
+    public ResponseEntity<String> Secure(){
+        return ResponseEntity.ok("you are on public");
+    }
+
     @GetMapping("/get/{username}")
     public String hello(@PathVariable("username") String username) {
         return "hello";
     }
-
 
     @PostMapping("/create")
     public Users createUser(@RequestBody Users users) {
