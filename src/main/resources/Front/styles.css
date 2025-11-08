@@ -1,0 +1,59 @@
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  background-color: black;
+  background-image: url('wallpaper.png');
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover; 
+  position: relative;
+  font-family: sans-serif;
+  color: white;
+}
+
+.top-left {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+}
+
+.center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+
+.bottom-left {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+}
+
+#TitleName {
+  position: absolute;
+}
+
+#button1 {
+  border-radius: 12px;
+  border: 2px solid black;
+  padding: 20px;
+  width: 150px;
+  height: 50px;
+   margin-left: 1700px;
+   margin-top: 10px;
+}
+
+#div1{
+  color: azure;
+  
+    font-size: 4rem;
+    font-weight: 660;
+    letter-spacing: -.03em;
+    line-height: 1.0625;
+    margin-left: 500px;
+    margin-top: 300px;
+}

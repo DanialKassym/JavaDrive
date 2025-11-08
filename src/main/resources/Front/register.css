@@ -1,0 +1,32 @@
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  background-color: black;
+  background-image: url('wallpaper.png');
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover; 
+  position: relative;
+  font-family: sans-serif;
+  color: white;
+}
+
+ .container {
+   display: flex; /* Enables Flexbox for layout */
+   flex-direction: column; /* Arranges items vertically */
+   align-items: center; /* Centers items horizontally within the container */
+   justify-content: center; /* Centers items vertically within the container (if container has a defined height) */
+   min-height: 100vh; /* Makes the container take up the full viewport height */
+ }
+
+ .box {
+   /* Add styling for your individual divs here */
+   width: 200px;
+   height: 100px;
+   background-color: lightblue;
+   margin: 10px; /* Adds space between the divs */
+   text-align: center;
+   line-height: 100px; /* Vertically centers text within the div */
+ }
