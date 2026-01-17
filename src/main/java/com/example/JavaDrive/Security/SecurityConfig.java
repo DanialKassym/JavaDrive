@@ -26,7 +26,9 @@ public class SecurityConfig {
                 .cors((cors -> cors.disable()))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/unsecure","/swagger-ui/**", "/swagger-ui.html",
-                                "/swagger-resources/**", "/v3/api-docs/**","/auth","/reg").permitAll()
+                                "/swagger-resources/**", "/v3/api-docs/**","/auth","/reg","/roles",
+                        "/emailConfirmation","/emailVerify/{emailToken}",
+                                "/v3/api-docs/**","/swagger-ui/favicon-32x32.png").permitAll()
                         .requestMatchers("/admin").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )

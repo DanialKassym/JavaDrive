@@ -18,6 +18,10 @@ public class UserController {
     public ResponseEntity<String> Unsecure(){
         return ResponseEntity.ok("you are on public");
     }
+    @GetMapping("/admin")
+    public ResponseEntity<String> Admin(){
+        return ResponseEntity.ok("you are on admin");
+    }
     @GetMapping("/secure")
     public ResponseEntity<String> Secure(){
         return ResponseEntity.ok("you are on public");

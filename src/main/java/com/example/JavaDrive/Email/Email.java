@@ -8,14 +8,23 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class Email {
-    @Autowired
-    private JavaMailSender javaMailSender;
+    final String From = "CloudStorage";
+    final String Subject = "Email Confirmation";
+    final String Text = "This is a message sent by JavaDrive to Confirm your email" +
+            "follow the link to confirm the email ";
 
-    public void sendSimpleEmail(String to, String subject, String text) {
+    private final JavaMailSender javaMailSender;
+    @Autowired
+    public Email(JavaMailSender javaMailSender) {
+        this.javaMailSender = javaMailSender;
+    }
+
+    public void sendSimpleEmail(String to,String jwtUrl) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(to);
-        message.setSubject(subject);
-        message.setText(text);
+        message.setFrom(From);
+        message.setSubject(Subject);
+        message.setText(Text + jwtUrl);
         javaMailSender.send(message);
     }
 
