@@ -26,7 +26,7 @@ dependencies {
 	implementation ("org.springframework.data:spring-data-jdbc")
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-	implementation("org.postgresql:postgresql:42.7.6")
+	implementation("org.postgresql:postgresql:42.7.7")
 	implementation("org.springframework.boot:spring-boot-starter-amqp")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.springframework.amqp:spring-rabbit-test")
@@ -34,7 +34,7 @@ dependencies {
 	runtimeOnly("io.jsonwebtoken:jjwt-impl:0.13.0")
 	runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.13.0")
 	//implementation("org.flywaydb:flyway-core")
-	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.13")
+	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.14")
 }
 
 tasks.withType<Test> {
