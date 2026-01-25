@@ -18,29 +18,29 @@ public class EmailToken {
     private String token;
     private String email;
 
-    @Column(nullable = false)
-    private Boolean verified;
-
     @Column(nullable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     @CreationTimestamp
     private Date Expiry;
 
+    @Column(nullable = false)
+    private Boolean verified;
+
     public EmailToken() {}
 
-    public EmailToken(String token, String email, Boolean verified, Date expiry) {
-        this.token = token;
-        this.email = email;
-        this.verified = verified;
-        Expiry = expiry;
-    }
-
-    public EmailToken(Long id, String token, String email, Boolean verified, Date expiry) {
+    public EmailToken(Long id, String token, String email, Date expiry, Boolean verified) {
         this.id = id;
         this.token = token;
         this.email = email;
-        this.verified = verified;
         Expiry = expiry;
+        this.verified = verified;
+    }
+
+    public EmailToken(String token, String email, Date expiry, Boolean verified) {
+        this.token = token;
+        this.email = email;
+        Expiry = expiry;
+        this.verified = verified;
     }
 
     public String getToken() {

@@ -1,0 +1,54 @@
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  background-color: black;
+  background-image: url('wallpaper.png');
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover; 
+  position: relative;
+  font-family: sans-serif;
+  color: white;
+}
+
+#header {
+   display: flex;
+   align-items: center;
+       /* Optional: add space between items */
+       gap: 10px;
+       /* Optional: align items vertically within the container */
+       align-items: center;
+
+    justify-content: flex-end;
+}
+
+#buttonRegister {
+                text-align: center;
+                  border-radius: 10px;
+                  border: 2px solid black;
+                  padding: 7px;
+                  width: 70px;
+                  margin-top: 10px;
+                  margin-left: auto;
+                }
+
+#buttonLogin {
+                             text-align: center;
+                               border-radius: 10px;
+                               border: 2px solid black;
+                               padding: 7px;
+                               width: 70px;
+                               margin-top: 10px;
+                             }
+
+#div1{
+  color: azure;
+    font-size: 5rem;
+    font-weight: 610;
+    letter-spacing: -.03em;
+    line-height: 1.0625;
+    margin-left: 300px;
+    margin-top: 200px;
+}

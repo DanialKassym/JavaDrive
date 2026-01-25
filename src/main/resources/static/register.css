@@ -1,0 +1,22 @@
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  background-color: black;
+  background-image: url('wallpaper.png');
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover; 
+  position: relative;
+  font-family: sans-serif;
+  color: white;
+}
+
+ .container {
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   justify-content: center;
+   min-height: 100vh;
+ }
