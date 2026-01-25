@@ -27,8 +27,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/unsecure","/swagger-ui/**", "/swagger-ui.html",
                                 "/swagger-resources/**", "/v3/api-docs/**","/auth","/reg","/roles",
-                        "/emailConfirmation","/emailVerify/{emailToken}",
-                                "/v3/api-docs/**","/swagger-ui/favicon-32x32.png").permitAll()
+                                "/emailConfirmation","/emailVerify/{emailToken}",
+                                "/v3/api-docs/**","/swagger-ui/favicon-32x32.png","/content/**").permitAll()
                         .requestMatchers("/admin").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
