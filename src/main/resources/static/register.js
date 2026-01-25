@@ -1,4 +1,4 @@
-async function registerUser() {
+async function SendEmail() {
   let email = document.querySelector('#email');
 
   const data = {
@@ -6,7 +6,7 @@ async function registerUser() {
   };
 
   try {
-    const response = await fetch("http://localhost:8081/register/", {
+    const response = await fetch("http://localhost:8081/emailConfirmation", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"

@@ -13,47 +13,42 @@ body, html {
   color: white;
 }
 
-.top-left {
-  position: absolute;
-  top: 20px;
-  left: 20px;
+#header {
+   display: flex;
+   align-items: center;
+       /* Optional: add space between items */
+       gap: 10px;
+       /* Optional: align items vertically within the container */
+       align-items: center;
+
+    justify-content: flex-end;
 }
 
-.center {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
+#buttonRegister {
+                text-align: center;
+                  border-radius: 10px;
+                  border: 2px solid black;
+                  padding: 7px;
+                  width: 70px;
+                  margin-top: 10px;
+                  margin-left: auto;
+                }
 
-
-.bottom-left {
-  position: absolute;
-  bottom: 20px;
-  left: 20px;
-}
-
-#TitleName {
-  position: absolute;
-}
-
-#button1 {
-  border-radius: 12px;
-  border: 2px solid black;
-  padding: 20px;
-  width: 150px;
-  height: 50px;
-   margin-left: 1700px;
-   margin-top: 10px;
-}
+#buttonLogin {
+                             text-align: center;
+                               border-radius: 10px;
+                               border: 2px solid black;
+                               padding: 7px;
+                               width: 70px;
+                               margin-top: 10px;
+                             }
 
 #div1{
   color: azure;
-  
-    font-size: 4rem;
-    font-weight: 660;
+    font-size: 5rem;
+    font-weight: 610;
     letter-spacing: -.03em;
     line-height: 1.0625;
-    margin-left: 500px;
-    margin-top: 300px;
+    margin-left: 300px;
+    margin-top: 200px;
 }
