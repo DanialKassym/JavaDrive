@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JavaDrive</title>
+<link rel="stylesheet" href="home.css">
+</head>
+
+<body>
+
+<div class="topbar">
+    <div class="logo">MyDrive</div>
+    <div class="search">
+        <input type="text" id="searchInput" placeholder="Search files...">
+    </div>
+</div>
+
+<div class="sidebar">
+    <button id="newBtn" onclick="window.location.href='upload.html'">+ New</button>
+
+    <div class="menu">
+        <div data-filter="all">My Drive</div>
+        <div data-filter="folder">Folders</div>
+        <div data-filter="file">Files</div>
+    </div>
+</div>
+
+<div class="main">
+    <h2>My Drive</h2>
+
+    <div id="status" class="status"></div>
+
+    <div class="files" id="files"></div>
+</div>
+
+</body>
+</html>

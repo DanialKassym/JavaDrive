@@ -2,7 +2,7 @@ async function SendEmail() {
   let email = document.querySelector('#email');
 
   const data = {
-    "Email": email.value
+    "email": email.value
   };
 
   try {
@@ -13,10 +13,10 @@ async function SendEmail() {
       },
       body: JSON.stringify(data)
     });
+
+    window.location.href = "email-verification.html";
   } catch (error) {
+    alert(error)
     console.error("Error during registration:", error);
-  }
-  finally{
-    window.location.href = "emailconf.html";
   }
 }

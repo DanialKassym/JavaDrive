@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Upload File</title>
+<link rel="stylesheet" href="upload.css">
+</head>
+
+<body>
+
+<div class="container">
+    <h2>Upload File</h2>
+
+    <div class="upload-box">
+        <input type="file" id="fileInput">
+    </div>
+
+    <div id="fileName" class="file-name">
+        No file selected
+    </div>
+
+    <button id="uploadBtn">Upload</button>
+
+    <div id="status" class="status"></div>
+
+    <button onclick="goBack()" class="backBtn">Back</button>
+</div>
+
+<script src="upload.js"></script>
+</body>
+</html>

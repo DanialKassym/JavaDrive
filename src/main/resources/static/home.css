@@ -1,0 +1,118 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    display: flex;
+    height: 100vh;
+    background: #f1f3f4;
+}
+
+.topbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background: white;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    border-bottom: 1px solid #ddd;
+    z-index: 1000;
+}
+
+.logo {
+    font-size: 20px;
+    font-weight: bold;
+    color: #1a73e8;
+}
+
+.search {
+    margin-left: 20px;
+    flex: 1;
+}
+
+.search input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 20px;
+    border: 1px solid #ccc;
+}
+
+.sidebar {
+    width: 220px;
+    background: white;
+    padding-top: 80px;
+    border-right: 1px solid #ddd;
+}
+
+.sidebar button {
+    margin: 10px;
+    padding: 12px;
+    width: calc(100% - 20px);
+    border: none;
+    border-radius: 20px;
+    background: #1a73e8;
+    color: white;
+    cursor: pointer;
+}
+
+.menu {
+    margin-top: 20px;
+}
+
+.menu div {
+    padding: 12px 20px;
+    cursor: pointer;
+}
+
+.menu div:hover {
+    background: #f1f3f4;
+}
+
+.main {
+    flex: 1;
+    margin-top: 60px;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.files {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 20px;
+}
+
+.file {
+    background: white;
+    border-radius: 10px;
+    padding: 15px;
+    cursor: pointer;
+    transition: 0.2s;
+    border: 1px solid #ddd;
+}
+
+.file:hover {
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.icon {
+    font-size: 40px;
+    text-align: center;
+}
+
+.name {
+    margin-top: 10px;
+    text-align: center;
+    font-size: 14px;
+}
+
+@media (max-width: 700px) {
+    .sidebar {
+        display: none;
+    }
+}
