@@ -5,14 +5,24 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "storage")
 public class StorageProperties {
 
-    private String location = "C:\\IntellijProjects\\JavaDrive\\files";
+    private String windowsLocation = "C:\\IntellijProjects\\JavaDrive\\files";
 
-    public String getLocation() {
-        return location;
+    private String linuxLocation = "/tmp/files";
+
+    public String getLinuxLocation() {
+        return linuxLocation;
     }
 
-    public void setLocation(String location) {
-        this.location = location;
+    public void setLinuxLocation(String linuxLocation) {
+        this.linuxLocation = linuxLocation;
+    }
+
+    public String getWindowsLocation() {
+        return windowsLocation;
+    }
+
+    public void setWindowsLocation(String windowsLocation) {
+        this.windowsLocation = windowsLocation;
     }
 
 }
