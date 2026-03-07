@@ -20,7 +20,9 @@ public class UserService implements UserDetailsService {
         this.userRepository = userRepository;
         this.rolesRepository = rolesRepository;
     }
-
+    public Users findByid(Long id){
+        return userRepository.findByid(id);
+    }
     public Optional<Users> findByusername(String username){
         return userRepository.findByusername(username);
     }

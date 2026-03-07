@@ -3,6 +3,9 @@ package com.example.JavaDrive.Users;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity
 @Table(name = "roles")
 public class Roles {
@@ -13,6 +16,11 @@ public class Roles {
 
     @Column(nullable = false)
     private String name;
+
+    @ManyToMany(mappedBy = "roles")
+    private Set<Users> users = new HashSet<>();
+
+    public Roles() {}
 
     public Roles(Long id, String name) {
         this.id = id;
@@ -34,4 +42,5 @@ public class Roles {
     public void setName(String name) {
         this.name = name;
     }
+
 }
