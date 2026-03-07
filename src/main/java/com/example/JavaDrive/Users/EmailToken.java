@@ -2,7 +2,6 @@ package com.example.JavaDrive.Users;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
-import org.hibernate.annotations.CreationTimestamp;
 
 import java.util.Date;
 
@@ -20,7 +19,6 @@ public class EmailToken {
 
     @Column(nullable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    @CreationTimestamp
     private Date Expiry;
 
     @Column(nullable = false)
@@ -32,7 +30,7 @@ public class EmailToken {
         this.id = id;
         this.token = token;
         this.email = email;
-        Expiry = expiry;
+        this.Expiry = expiry;
         this.verified = verified;
     }
 

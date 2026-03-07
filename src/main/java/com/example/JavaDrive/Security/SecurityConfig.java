@@ -11,6 +11,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -20,18 +22,20 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, JWTAuthFilter jwtAuthFilter) throws Exception {
         http
                 .csrf((csrf -> csrf.disable()))
                 .cors((cors -> cors.disable()))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/unsecure","/swagger-ui/**", "/swagger-ui.html",
-                                "/swagger-resources/**", "/v3/api-docs/**","/auth","/reg","/roles",
-                                "/emailConfirmation","/emailVerify/{emailToken}",
-                                "/v3/api-docs/**","/swagger-ui/favicon-32x32.png","/content/**").permitAll()
-                        .requestMatchers("/admin").hasRole("ADMIN")
+                        .requestMatchers("/static/home", "/static/upload.html").hasAuthority("USER_ROLE")
+                        .requestMatchers("/register","/login","/emailConfirmation",
+                                "/emailVerify/{emailToken}", "/swagger-ui/**", "/swagger-ui.html",
+                                "/swagger-resources/**", "/v3/api-docs/**",
+                                "/v3/api-docs/**","/static/**","/error","/favicon.ico").permitAll()
+                        .requestMatchers("/dashboard","/upload").hasAuthority("USER_ROLE")
                         .anyRequest().authenticated()
                 )
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement((session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)));
         return http.build();

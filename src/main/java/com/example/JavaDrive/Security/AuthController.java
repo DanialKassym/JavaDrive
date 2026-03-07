@@ -10,7 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -21,35 +20,39 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.URI;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.Set;
 
 @RestController
 public class AuthController {
-    private static final Logger log = LoggerFactory.getLogger(AuthController.class);
     private final UserService userService;
     private final JWTTokenUtils jwtTokenUtils;
     private final AuthenticationManager authenticationManager;
     private final UserRepository userRepository;
     private final EmailTokenRepository emailTokenRepository;
     private final Email emailSender;
+    private final RolesRepository rolesRepository;
     @Value("${emailRegex}")
     private String emailRegex;
 
     @Autowired
     public AuthController(UserService userService, JWTTokenUtils jwtTokenUtils, AuthenticationManager authenticationManager,
-                          UserRepository userRepository, EmailTokenRepository emailTokenRepository, Email emailSender) {
+                          UserRepository userRepository, EmailTokenRepository emailTokenRepository, Email emailSender,
+                          RolesRepository rolesRepository) {
         this.userService = userService;
         this.jwtTokenUtils = jwtTokenUtils;
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
         this.emailTokenRepository = emailTokenRepository;
         this.emailSender = emailSender;
+        this.rolesRepository = rolesRepository;
     }
 
     @PostMapping("/emailConfirmation")
+    @Transactional
     public ResponseEntity<?> EmailConfirmation(@RequestBody @Valid EmailAddress emailAddress) {
         String userEmail = emailAddress.getEmail();
         if (!EmailValidate.patternMatches(userEmail, emailRegex)) {
@@ -57,24 +60,26 @@ public class AuthController {
         }
         String uuid = uuidUtils.generateUniqueToken();
         String link = "http://localhost:8081/emailVerify/" + uuid;
-        LocalDateTime localDateTime = LocalDateTime.now().plusMinutes(15);
-        Date date = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
-        emailTokenRepository.save(new EmailToken(uuid, userEmail, date, false));
+        Date expiryDate = new Date(System.currentTimeMillis() + 15 * 60 * 1000);
+        emailTokenRepository.save(new EmailToken(uuid, userEmail, expiryDate, false));
         emailSender.sendSimpleEmail(userEmail, link);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/emailVerify/{emailToken}")
     @Transactional
-    public ResponseEntity<String> EmailVerify(@PathVariable("emailToken") String emailToken, HttpServletResponse response) {
+    public void EmailVerify(@PathVariable("emailToken") String emailToken, HttpServletResponse response) throws IOException {
         EmailToken token = emailTokenRepository.findBytoken(emailToken);
         if (token == null) {
-            return ResponseEntity.badRequest().build();
+            response.sendError(HttpServletResponse.SC_NOT_FOUND, "The requested resource was not found.");
+            return;
         }
         if (token.getExpiry().before(new Date())) {
-            return ResponseEntity.badRequest().build();
+            response.sendError(HttpServletResponse.SC_NOT_FOUND, "The requested resource was not found.");
+            return;
         }
         token.setVerified(true);
+
         Cookie tokenCookie = new Cookie("Token", token.getToken());
         tokenCookie.setMaxAge(20 * 60);
         tokenCookie.setHttpOnly(true);
@@ -87,14 +92,14 @@ public class AuthController {
 
         response.addCookie(tokenCookie);
         response.addCookie(emailCookie);
-        HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(URI.create("/content/register.html"));
-        return new ResponseEntity<String>(headers, HttpStatus.FOUND);
+
+        response.sendRedirect("/static/create-account.html");
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> Register(@RequestBody JwtRequest request,@CookieValue(name = "Token",required = true) String token,
-        @CookieValue(name = "Email",required = true) String email,HttpServletResponse response) {
+    @Transactional
+    public ResponseEntity<String> Register(@RequestBody AuthRequest request, @CookieValue(name = "Token") String token,
+                                           @CookieValue(name = "Email") String email, HttpServletResponse response) {
         EmailToken emailToken = emailTokenRepository.findBytoken(token);
         EmailToken email2 = emailTokenRepository.findByEmail(email);
         if (emailToken == null || email2 == null) {
@@ -109,21 +114,28 @@ public class AuthController {
         Date date = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
 
         Users user = new Users(request.username, email, password_hash, date);
+        user.setRoles(Set.of(rolesRepository.findByName("USER_ROLE").get()));
         userRepository.save(user);
-        HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(URI.create("/content/login.html"));
-        return new ResponseEntity<String>(headers, HttpStatus.FOUND);
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/login")
-    public ResponseEntity<JwtResponse> Authenticate(@RequestBody JwtRequest request) {
+    @Transactional
+    public ResponseEntity<?> Authenticate(@RequestBody AuthRequest request, HttpServletResponse response) {
+
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.username, request.password));
         } catch (AuthenticationException e) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
+        String id = String.valueOf(userRepository.findByusername(request.username).get().getId());
         UserDetails userDetails = userService.loadUserByUsername(request.username);
-        String token = jwtTokenUtils.generateJwtToken(userDetails);
-        return ResponseEntity.ok(new JwtResponse(token));
+        String token = jwtTokenUtils.generateJwtToken(userDetails, id);
+        Cookie cookie = new Cookie("JWT", token);
+        cookie.setHttpOnly(true);
+        cookie.setPath("/");
+        cookie.setMaxAge(24 * 60 * 60);
+        response.addCookie(cookie);
+        return ResponseEntity.ok().build();
     }
 }

@@ -1,10 +1,10 @@
 package com.example.JavaDrive.utils;
 
-public class JwtRequest {
+public class AuthRequest {
     public String username;
     public String password;
 
-    public JwtRequest(String username, String password) {
+    public AuthRequest(String username, String password) {
         this.username = username;
         this.password = password;
     }

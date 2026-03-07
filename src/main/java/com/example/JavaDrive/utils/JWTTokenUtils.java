@@ -12,9 +12,7 @@ import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Component
 public class JWTTokenUtils {
@@ -24,16 +22,14 @@ public class JWTTokenUtils {
     @Value("${jwt.lifetime}")
     private Duration lifetime;
 
-    public String generateJwtToken(UserDetails userDetails) {
-        Map<String, Object> claims = new HashMap<>();
+    public String generateJwtToken(UserDetails userDetails, String id) {
         List<String> roles = userDetails.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority).toList();
-        claims.put("roles", roles);
         Date issueddate = new Date();
         Date expireddate = new Date(issueddate.getTime() + lifetime.toMillis());
         SecretKey key = Keys.hmacShaKeyFor(secretkey.getBytes(StandardCharsets.UTF_8));
 
-        return Jwts.builder()
+        return Jwts.builder().claim("id",id).claim("roles", roles)
                 .claims().issuer("http://localhost:8081").subject(userDetails.getUsername()).issuedAt(issueddate).expiration(expireddate).and()
                 .signWith(key).compact();
     }
@@ -46,8 +42,24 @@ public class JWTTokenUtils {
                 parseSignedClaims(token)
                 .getPayload();
     }
+    public boolean validateToken(String token) {
+        SecretKey key = Keys.hmacShaKeyFor(secretkey.getBytes(StandardCharsets.UTF_8));
+        try{
+            Jwts.parser()
+                    .verifyWith(key)
+                    .build()
+                    .parseSignedClaims(token);
+
+            return true;
+        } catch (Exception e){
+            return  false;
+        }
+    }
     public String getUsername(String token){
         return getClaimsFromToken(token).getSubject();
+    }
+    public String getID(String token){
+        return getClaimsFromToken(token).get("id").toString();
     }
     public List<String> getRoles(String token){
         return getClaimsFromToken(token).get("roles", List.class);
