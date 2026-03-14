@@ -22,7 +22,7 @@ public class JWTTokenUtils {
     @Value("${jwt.lifetime}")
     private Duration lifetime;
 
-    public String generateJwtToken(UserDetails userDetails, String id) {
+    public String generateJwtToken(UserDetails userDetails, String id){
         List<String> roles = userDetails.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority).toList();
         Date issueddate = new Date();

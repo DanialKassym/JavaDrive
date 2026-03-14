@@ -1,4 +1,4 @@
-package com.example.JavaDrive.utils;
+package com.example.JavaDrive.domain.entity;
 
 public class AuthRequest {
     public String username;

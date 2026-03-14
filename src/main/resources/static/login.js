@@ -8,7 +8,7 @@ async function Login() {
   };
 
   try {
-    const response = await fetch("http://localhost:8081/login", {
+    const response = await fetch("/login", {
       method: "POST",
       credentials: 'include',
       headers: {

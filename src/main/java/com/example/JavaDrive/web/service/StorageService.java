@@ -1,4 +1,4 @@
-package com.example.JavaDrive.Upload;
+package com.example.JavaDrive.web.service;
 
 import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;

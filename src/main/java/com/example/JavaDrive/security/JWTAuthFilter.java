@@ -1,4 +1,4 @@
-package com.example.JavaDrive.Security;
+package com.example.JavaDrive.security;
 
 import com.example.JavaDrive.utils.JWTTokenUtils;
 import jakarta.servlet.FilterChain;

@@ -1,7 +1,11 @@
-package com.example.JavaDrive.Upload;
+package com.example.JavaDrive.web.controller;
 
-import com.example.JavaDrive.Users.UserRepository;
-import com.example.JavaDrive.Users.Users;
+import com.example.JavaDrive.domain.entity.UploadFile;
+import com.example.JavaDrive.domain.entity.Users;
+import com.example.JavaDrive.exception.StorageFileNotFoundException;
+import com.example.JavaDrive.domain.repository.UploadFileRepository;
+import com.example.JavaDrive.domain.repository.UserRepository;
+import com.example.JavaDrive.web.service.StorageService;
 import com.example.JavaDrive.utils.JWTTokenUtils;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -68,7 +72,10 @@ public class FileUploadController { private final StorageService storageService;
         }
         return ResponseEntity.badRequest().build();
     }
-
+    @PostMapping("/hello")
+    public ResponseEntity<String> hello() {
+        return ResponseEntity.ok("hello");
+    }
     @ExceptionHandler(StorageFileNotFoundException.class)
     public ResponseEntity<?> handleStorageFileNotFound(StorageFileNotFoundException exc) {
         return ResponseEntity.notFound().build();

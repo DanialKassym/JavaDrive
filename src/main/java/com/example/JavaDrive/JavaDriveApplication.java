@@ -1,6 +1,6 @@
 package com.example.JavaDrive;
 
-import com.example.JavaDrive.Upload.StorageProperties;
+import com.example.JavaDrive.config.StorageProperties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;

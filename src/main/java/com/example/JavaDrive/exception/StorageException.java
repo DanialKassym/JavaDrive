@@ -1,4 +1,4 @@
-package com.example.JavaDrive.Upload;
+package com.example.JavaDrive.exception;
 
 public class StorageException extends RuntimeException {
 

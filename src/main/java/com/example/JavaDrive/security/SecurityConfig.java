@@ -1,6 +1,6 @@
-package com.example.JavaDrive.Security;
+package com.example.JavaDrive.security;
 
-import com.example.JavaDrive.Users.UserService;
+import com.example.JavaDrive.web.service.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -31,7 +31,7 @@ public class SecurityConfig {
                         .requestMatchers("/register","/login","/emailConfirmation",
                                 "/emailVerify/{emailToken}", "/swagger-ui/**", "/swagger-ui.html",
                                 "/swagger-resources/**", "/v3/api-docs/**",
-                                "/v3/api-docs/**","/static/**","/error","/favicon.ico").permitAll()
+                                "/v3/api-docs/**","/static/**","/error","/favicon.ico","/test").permitAll()
                         .requestMatchers("/dashboard","/upload").hasAuthority("USER_ROLE")
                         .anyRequest().authenticated()
                 )

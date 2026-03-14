@@ -1,21 +1,24 @@
-package com.example.JavaDrive.Security;
+package com.example.JavaDrive.web.controller;
 
-import com.example.JavaDrive.Email.Email;
-import com.example.JavaDrive.Users.*;
-import com.example.JavaDrive.utils.*;
+import com.example.JavaDrive.web.service.Email;
+import com.example.JavaDrive.web.service.UserService;
+import com.example.JavaDrive.domain.entity.AuthRequest;
+import com.example.JavaDrive.domain.entity.EmailAddress;
+import com.example.JavaDrive.domain.entity.EmailToken;
+import com.example.JavaDrive.domain.entity.Users;
+import com.example.JavaDrive.domain.repository.EmailTokenRepository;
+import com.example.JavaDrive.domain.repository.RolesRepository;
+import com.example.JavaDrive.domain.repository.UserRepository;
+import com.example.JavaDrive.utils.EmailValidate;
+import com.example.JavaDrive.utils.JWTTokenUtils;
+import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +28,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.Set;
+import java.util.UUID;
 
 @RestController
 public class AuthController {
@@ -37,7 +41,8 @@ public class AuthController {
     private final RolesRepository rolesRepository;
     @Value("${emailRegex}")
     private String emailRegex;
-
+    @Value("${server.port}")
+    private String port;
     @Autowired
     public AuthController(UserService userService, JWTTokenUtils jwtTokenUtils, AuthenticationManager authenticationManager,
                           UserRepository userRepository, EmailTokenRepository emailTokenRepository, Email emailSender,
@@ -50,7 +55,10 @@ public class AuthController {
         this.emailSender = emailSender;
         this.rolesRepository = rolesRepository;
     }
-
+    @PostConstruct
+    public void init() {
+        System.out.println("The server port is: " + port);
+    }
     @PostMapping("/emailConfirmation")
     @Transactional
     public ResponseEntity<?> EmailConfirmation(@RequestBody @Valid EmailAddress emailAddress) {
@@ -58,7 +66,7 @@ public class AuthController {
         if (!EmailValidate.patternMatches(userEmail, emailRegex)) {
             return ResponseEntity.badRequest().build();
         }
-        String uuid = uuidUtils.generateUniqueToken();
+        String uuid = UUID.randomUUID().toString();
         String link = "http://localhost:8081/emailVerify/" + uuid;
         Date expiryDate = new Date(System.currentTimeMillis() + 15 * 60 * 1000);
         emailTokenRepository.save(new EmailToken(uuid, userEmail, expiryDate, false));
@@ -119,7 +127,7 @@ public class AuthController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/login")
+    /*@PostMapping("/login")
     @Transactional
     public ResponseEntity<?> Authenticate(@RequestBody AuthRequest request, HttpServletResponse response) {
 
@@ -130,12 +138,12 @@ public class AuthController {
         }
         String id = String.valueOf(userRepository.findByusername(request.username).get().getId());
         UserDetails userDetails = userService.loadUserByUsername(request.username);
-        String token = jwtTokenUtils.generateJwtToken(userDetails, id);
+       // String token = jwtTokenUtils.generateJwtToken(userDetails, id);
         Cookie cookie = new Cookie("JWT", token);
         cookie.setHttpOnly(true);
         cookie.setPath("/");
         cookie.setMaxAge(24 * 60 * 60);
         response.addCookie(cookie);
         return ResponseEntity.ok().build();
-    }
+    }*/
 }

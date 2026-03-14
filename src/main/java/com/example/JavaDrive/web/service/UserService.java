@@ -1,5 +1,9 @@
-package com.example.JavaDrive.Users;
+package com.example.JavaDrive.web.service;
 
+import com.example.JavaDrive.domain.entity.Roles;
+import com.example.JavaDrive.domain.entity.Users;
+import com.example.JavaDrive.domain.repository.RolesRepository;
+import com.example.JavaDrive.domain.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;

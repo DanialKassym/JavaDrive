@@ -32,7 +32,7 @@ uploadBtn.addEventListener("click", async () => {
     formData.append("file", selectedFile);
 
     try {
-        const response = await fetch("http://localhost:8081/upload", {
+        const response = await fetch("/upload", {
             method: "POST",
             body: formData,
             credentials: "include"

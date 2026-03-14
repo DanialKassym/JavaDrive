@@ -1,4 +1,4 @@
-package com.example.JavaDrive.utils;
+package com.example.JavaDrive.domain.entity;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;

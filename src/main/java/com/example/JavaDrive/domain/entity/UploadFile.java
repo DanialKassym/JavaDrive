@@ -1,6 +1,5 @@
-package com.example.JavaDrive.Upload;
+package com.example.JavaDrive.domain.entity;
 
-import com.example.JavaDrive.Users.Users;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
