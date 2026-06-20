@@ -19,17 +19,17 @@ public class JWTTokenUtils {
     @Value("${jwt.secret}")
     private String secretkey;
 
-    @Value("${jwt.lifetime}")
+    @Value("${jwt.lifetime:}")
     private Duration lifetime;
 
     public String generateJwtToken(UserDetails userDetails, String id){
-        List<String> roles = userDetails.getAuthorities().stream()
+        List<String> role = userDetails.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority).toList();
         Date issueddate = new Date();
         Date expireddate = new Date(issueddate.getTime() + lifetime.toMillis());
         SecretKey key = Keys.hmacShaKeyFor(secretkey.getBytes(StandardCharsets.UTF_8));
 
-        return Jwts.builder().claim("id",id).claim("roles", roles)
+        return Jwts.builder().claim("id",id).claim("role", role)
                 .claims().issuer("http://localhost:8081").subject(userDetails.getUsername()).issuedAt(issueddate).expiration(expireddate).and()
                 .signWith(key).compact();
     }
@@ -62,6 +62,6 @@ public class JWTTokenUtils {
         return getClaimsFromToken(token).get("id").toString();
     }
     public List<String> getRoles(String token){
-        return getClaimsFromToken(token).get("roles", List.class);
+        return getClaimsFromToken(token).get("role", List.class);
     }
 }

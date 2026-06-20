@@ -1,12 +1,12 @@
-package com.example.JavaDrive.web.controller;
+package com.example.JavaDrive.web.controller.api;
 
 import com.example.JavaDrive.domain.entity.UploadFile;
 import com.example.JavaDrive.domain.entity.Users;
-import com.example.JavaDrive.exception.StorageFileNotFoundException;
 import com.example.JavaDrive.domain.repository.UploadFileRepository;
 import com.example.JavaDrive.domain.repository.UserRepository;
-import com.example.JavaDrive.web.service.StorageService;
+import com.example.JavaDrive.exception.StorageFileNotFoundException;
 import com.example.JavaDrive.utils.JWTTokenUtils;
+import com.example.JavaDrive.web.service.StorageService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;

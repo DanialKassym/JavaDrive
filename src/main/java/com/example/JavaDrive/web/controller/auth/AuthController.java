@@ -1,24 +1,28 @@
-package com.example.JavaDrive.web.controller;
+package com.example.JavaDrive.web.controller.auth;
 
-import com.example.JavaDrive.web.service.Email;
-import com.example.JavaDrive.web.service.UserService;
-import com.example.JavaDrive.domain.entity.AuthRequest;
-import com.example.JavaDrive.domain.entity.EmailAddress;
 import com.example.JavaDrive.domain.entity.EmailToken;
 import com.example.JavaDrive.domain.entity.Users;
+import com.example.JavaDrive.domain.enums.RoleEnum;
 import com.example.JavaDrive.domain.repository.EmailTokenRepository;
-import com.example.JavaDrive.domain.repository.RolesRepository;
 import com.example.JavaDrive.domain.repository.UserRepository;
 import com.example.JavaDrive.utils.EmailValidate;
 import com.example.JavaDrive.utils.JWTTokenUtils;
+import com.example.JavaDrive.web.dto.AuthRequest;
+import com.example.JavaDrive.web.dto.EmailAddress;
+import com.example.JavaDrive.web.service.Email;
+import com.example.JavaDrive.web.service.UserService;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -27,7 +31,6 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
-import java.util.Set;
 import java.util.UUID;
 
 @RestController
@@ -38,22 +41,19 @@ public class AuthController {
     private final UserRepository userRepository;
     private final EmailTokenRepository emailTokenRepository;
     private final Email emailSender;
-    private final RolesRepository rolesRepository;
     @Value("${emailRegex}")
     private String emailRegex;
     @Value("${server.port}")
     private String port;
     @Autowired
     public AuthController(UserService userService, JWTTokenUtils jwtTokenUtils, AuthenticationManager authenticationManager,
-                          UserRepository userRepository, EmailTokenRepository emailTokenRepository, Email emailSender,
-                          RolesRepository rolesRepository) {
+                          UserRepository userRepository, EmailTokenRepository emailTokenRepository, Email emailSender) {
         this.userService = userService;
         this.jwtTokenUtils = jwtTokenUtils;
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
         this.emailTokenRepository = emailTokenRepository;
         this.emailSender = emailSender;
-        this.rolesRepository = rolesRepository;
     }
     @PostConstruct
     public void init() {
@@ -106,7 +106,7 @@ public class AuthController {
 
     @PostMapping("/register")
     @Transactional
-    public ResponseEntity<String> Register(@RequestBody AuthRequest request, @CookieValue(name = "Token") String token,
+    public ResponseEntity<String> Register(@Valid @RequestBody AuthRequest request, @CookieValue(name = "Token") String token,
                                            @CookieValue(name = "Email") String email, HttpServletResponse response) {
         EmailToken emailToken = emailTokenRepository.findBytoken(token);
         EmailToken email2 = emailTokenRepository.findByEmail(email);
@@ -121,13 +121,12 @@ public class AuthController {
         LocalDateTime localDateTime = LocalDateTime.now();
         Date date = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
 
-        Users user = new Users(request.username, email, password_hash, date);
-        user.setRoles(Set.of(rolesRepository.findByName("USER_ROLE").get()));
+        Users user = new Users(request.username, email, password_hash, date,RoleEnum.ROLE_USER);
         userRepository.save(user);
         return ResponseEntity.ok().build();
     }
 
-    /*@PostMapping("/login")
+    @PostMapping("/login")
     @Transactional
     public ResponseEntity<?> Authenticate(@RequestBody AuthRequest request, HttpServletResponse response) {
 
@@ -138,12 +137,12 @@ public class AuthController {
         }
         String id = String.valueOf(userRepository.findByusername(request.username).get().getId());
         UserDetails userDetails = userService.loadUserByUsername(request.username);
-       // String token = jwtTokenUtils.generateJwtToken(userDetails, id);
+        String token = jwtTokenUtils.generateJwtToken(userDetails, id);
         Cookie cookie = new Cookie("JWT", token);
         cookie.setHttpOnly(true);
         cookie.setPath("/");
         cookie.setMaxAge(24 * 60 * 60);
         response.addCookie(cookie);
         return ResponseEntity.ok().build();
-    }*/
+    }
 }

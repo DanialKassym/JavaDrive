@@ -2,11 +2,17 @@ package com.example.JavaDrive.domain.entity;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
+import lombok.*;
 
 import java.util.Date;
 
 @Entity
 @Table(name = "emailtoken")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class EmailToken {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,49 +30,11 @@ public class EmailToken {
     @Column(nullable = false)
     private Boolean verified;
 
-    public EmailToken() {}
-
-    public EmailToken(Long id, String token, String email, Date expiry, Boolean verified) {
-        this.id = id;
-        this.token = token;
-        this.email = email;
-        this.Expiry = expiry;
-        this.verified = verified;
-    }
-
     public EmailToken(String token, String email, Date expiry, Boolean verified) {
         this.token = token;
         this.email = email;
         Expiry = expiry;
         this.verified = verified;
-    }
-
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public Boolean getVerified() {
-        return verified;
-    }
-
-    public void setVerified(Boolean verified) {
-        this.verified = verified;
-    }
-
-    public Date getExpiry() {
-        return Expiry;
     }
 }
 

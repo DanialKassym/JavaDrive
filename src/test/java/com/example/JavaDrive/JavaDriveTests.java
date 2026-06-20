@@ -1,9 +1,8 @@
 package com.example.JavaDrive;
 
 import com.example.JavaDrive.web.service.Email;
-import com.example.JavaDrive.web.controller.AuthController;
+import com.example.JavaDrive.web.controller.auth.AuthController;
 import com.example.JavaDrive.domain.repository.EmailTokenRepository;
-import com.example.JavaDrive.domain.repository.RolesRepository;
 import com.example.JavaDrive.domain.repository.UserRepository;
 import com.example.JavaDrive.web.service.UserService;
 import com.example.JavaDrive.utils.JWTTokenUtils;
@@ -31,17 +30,15 @@ public class JavaDriveTests {
     private final UserRepository userRepository;
     private final EmailTokenRepository emailTokenRepository;
     private final Email emailSender;
-    private final RolesRepository rolesRepository;
 
     @Autowired
-    public JavaDriveTests(UserService userService, JWTTokenUtils jwtTokenUtils, AuthenticationManager authenticationManager, UserRepository userRepository, EmailTokenRepository emailTokenRepository, Email emailSender, RolesRepository rolesRepository) {
+    public JavaDriveTests(UserService userService, JWTTokenUtils jwtTokenUtils, AuthenticationManager authenticationManager, UserRepository userRepository, EmailTokenRepository emailTokenRepository, Email emailSender) {
         this.userService = userService;
         this.jwtTokenUtils = jwtTokenUtils;
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
         this.emailTokenRepository = emailTokenRepository;
         this.emailSender = emailSender;
-        this.rolesRepository = rolesRepository;
     }
 
     @Test
