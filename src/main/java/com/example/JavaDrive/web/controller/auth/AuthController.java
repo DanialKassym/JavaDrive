@@ -9,12 +9,13 @@ import com.example.JavaDrive.utils.EmailValidate;
 import com.example.JavaDrive.utils.JWTTokenUtils;
 import com.example.JavaDrive.web.dto.AuthRequest;
 import com.example.JavaDrive.web.dto.EmailAddress;
-import com.example.JavaDrive.web.service.Email;
-import com.example.JavaDrive.web.service.UserService;
+import com.example.JavaDrive.web.service.infrastructure.Email;
+import com.example.JavaDrive.web.service.user.UserService;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -33,6 +34,7 @@ import java.time.ZoneId;
 import java.util.Date;
 import java.util.UUID;
 
+@AllArgsConstructor
 @RestController
 public class AuthController {
     private final UserService userService;
@@ -45,16 +47,7 @@ public class AuthController {
     private String emailRegex;
     @Value("${server.port}")
     private String port;
-    @Autowired
-    public AuthController(UserService userService, JWTTokenUtils jwtTokenUtils, AuthenticationManager authenticationManager,
-                          UserRepository userRepository, EmailTokenRepository emailTokenRepository, Email emailSender) {
-        this.userService = userService;
-        this.jwtTokenUtils = jwtTokenUtils;
-        this.authenticationManager = authenticationManager;
-        this.userRepository = userRepository;
-        this.emailTokenRepository = emailTokenRepository;
-        this.emailSender = emailSender;
-    }
+
     @PostConstruct
     public void init() {
         System.out.println("The server port is: " + port);

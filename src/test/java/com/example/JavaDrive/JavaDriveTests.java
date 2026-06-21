@@ -1,10 +1,10 @@
 package com.example.JavaDrive;
 
-import com.example.JavaDrive.web.service.Email;
+import com.example.JavaDrive.web.service.infrastructure.Email;
 import com.example.JavaDrive.web.controller.auth.AuthController;
 import com.example.JavaDrive.domain.repository.EmailTokenRepository;
 import com.example.JavaDrive.domain.repository.UserRepository;
-import com.example.JavaDrive.web.service.UserService;
+import com.example.JavaDrive.web.service.user.UserService;
 import com.example.JavaDrive.utils.JWTTokenUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

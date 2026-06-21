@@ -1,6 +1,6 @@
 package com.example.JavaDrive.security;
 
-import com.example.JavaDrive.web.service.UserService;
+import com.example.JavaDrive.web.service.user.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;

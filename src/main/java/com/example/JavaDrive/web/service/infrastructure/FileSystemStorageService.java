@@ -1,4 +1,4 @@
-package com.example.JavaDrive.web.service;
+package com.example.JavaDrive.web.service.infrastructure;
 
 import com.example.JavaDrive.config.StorageProperties;
 import com.example.JavaDrive.exception.StorageException;

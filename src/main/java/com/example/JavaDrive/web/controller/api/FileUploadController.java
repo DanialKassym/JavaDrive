@@ -6,9 +6,10 @@ import com.example.JavaDrive.domain.repository.UploadFileRepository;
 import com.example.JavaDrive.domain.repository.UserRepository;
 import com.example.JavaDrive.exception.StorageFileNotFoundException;
 import com.example.JavaDrive.utils.JWTTokenUtils;
-import com.example.JavaDrive.web.service.StorageService;
+import com.example.JavaDrive.web.service.infrastructure.StorageService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
@@ -17,19 +18,14 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.WebUtils;
 
+@AllArgsConstructor
 @RestController
 public class FileUploadController { private final StorageService storageService;
     private final JWTTokenUtils jwtTokenUtils;
     private final UploadFileRepository uploadFileRepository;
     private final UserRepository userRepository;
 
-    @Autowired
-    public FileUploadController(StorageService storageService, JWTTokenUtils jwtTokenUtils, UploadFileRepository uploadFileRepository, UserRepository userRepository) {
-        this.storageService = storageService;
-        this.jwtTokenUtils = jwtTokenUtils;
-        this.uploadFileRepository = uploadFileRepository;
-        this.userRepository = userRepository;
-    }
+
 
     @GetMapping("/dashboard")
     @Transactional

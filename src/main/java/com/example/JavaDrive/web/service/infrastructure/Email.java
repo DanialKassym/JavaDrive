@@ -1,4 +1,4 @@
-package com.example.JavaDrive.web.service;
+package com.example.JavaDrive.web.service.infrastructure;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;

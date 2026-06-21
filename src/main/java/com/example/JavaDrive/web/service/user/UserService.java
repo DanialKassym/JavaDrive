@@ -1,4 +1,4 @@
-package com.example.JavaDrive.web.service;
+package com.example.JavaDrive.web.service.user;
 
 import com.example.JavaDrive.domain.entity.Users;
 import com.example.JavaDrive.domain.enums.RoleEnum;

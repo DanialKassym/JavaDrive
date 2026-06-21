@@ -1,4 +1,4 @@
-package com.example.JavaDrive.web.service;
+package com.example.JavaDrive.web.service.infrastructure;
 
 import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
