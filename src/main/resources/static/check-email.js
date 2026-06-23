@@ -6,7 +6,7 @@ async function SendEmail() {
   };
 
   try {
-    const response = await fetch("/emailConfirmation", {
+    const response = await fetch("/auth/emailConfirmation", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"

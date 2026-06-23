@@ -1,141 +1,79 @@
 package com.example.JavaDrive.web.controller.auth;
 
-import com.example.JavaDrive.domain.entity.EmailToken;
-import com.example.JavaDrive.domain.entity.Users;
-import com.example.JavaDrive.domain.enums.RoleEnum;
-import com.example.JavaDrive.domain.repository.EmailTokenRepository;
-import com.example.JavaDrive.domain.repository.UserRepository;
-import com.example.JavaDrive.utils.EmailValidate;
-import com.example.JavaDrive.utils.JWTTokenUtils;
 import com.example.JavaDrive.web.dto.AuthRequest;
 import com.example.JavaDrive.web.dto.EmailAddress;
-import com.example.JavaDrive.web.service.infrastructure.Email;
-import com.example.JavaDrive.web.service.user.UserService;
-import jakarta.annotation.PostConstruct;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletResponse;
+import com.example.JavaDrive.web.dto.UserAuthDto;
+import com.example.JavaDrive.web.service.auth.AuthService;
+import com.example.JavaDrive.web.service.jwt.JwtService;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.Date;
-import java.util.UUID;
+import java.util.List;
 
-@AllArgsConstructor
 @RestController
+@RequestMapping("/auth")
+@RequiredArgsConstructor
 public class AuthController {
-    private final UserService userService;
-    private final JWTTokenUtils jwtTokenUtils;
-    private final AuthenticationManager authenticationManager;
-    private final UserRepository userRepository;
-    private final EmailTokenRepository emailTokenRepository;
-    private final Email emailSender;
-    @Value("${emailRegex}")
-    private String emailRegex;
-    @Value("${server.port}")
-    private String port;
+    private final AuthService authService;
+    private final JwtService jwtService;
 
-    @PostConstruct
-    public void init() {
-        System.out.println("The server port is: " + port);
-    }
     @PostMapping("/emailConfirmation")
-    @Transactional
-    public ResponseEntity<?> EmailConfirmation(@RequestBody @Valid EmailAddress emailAddress) {
+    public ResponseEntity<?> confirmEmail(@RequestBody @Valid EmailAddress emailAddress) {
         String userEmail = emailAddress.getEmail();
-        if (!EmailValidate.patternMatches(userEmail, emailRegex)) {
+        if (!authService.sendVerificationEmail(userEmail)){
             return ResponseEntity.badRequest().build();
         }
-        String uuid = UUID.randomUUID().toString();
-        String link = "http://localhost:8081/emailVerify/" + uuid;
-        Date expiryDate = new Date(System.currentTimeMillis() + 15 * 60 * 1000);
-        emailTokenRepository.save(new EmailToken(uuid, userEmail, expiryDate, false));
-        emailSender.sendSimpleEmail(userEmail, link);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/emailVerify/{emailToken}")
-    @Transactional
-    public void EmailVerify(@PathVariable("emailToken") String emailToken, HttpServletResponse response) throws IOException {
-        EmailToken token = emailTokenRepository.findBytoken(emailToken);
-        if (token == null) {
-            response.sendError(HttpServletResponse.SC_NOT_FOUND, "The requested resource was not found.");
-            return;
+    public ResponseEntity<Void> verifyEmail(@PathVariable("emailToken") String emailToken) throws IOException {
+        if (!jwtService.ValidateEmail(emailToken)){
+            ResponseEntity.badRequest().build();
         }
-        if (token.getExpiry().before(new Date())) {
-            response.sendError(HttpServletResponse.SC_NOT_FOUND, "The requested resource was not found.");
-            return;
+        List<String> Cookies = jwtService.EmailVerify(emailToken);
+
+        var responseBuilder = ResponseEntity.status(HttpStatus.FOUND);
+
+        responseBuilder.header(HttpHeaders.LOCATION, "/static/create-account.html");
+
+        for (String cookieString : Cookies) {
+            responseBuilder.header(HttpHeaders.SET_COOKIE, cookieString);
         }
-        token.setVerified(true);
 
-        Cookie tokenCookie = new Cookie("Token", token.getToken());
-        tokenCookie.setMaxAge(20 * 60);
-        tokenCookie.setHttpOnly(true);
-        tokenCookie.setPath("/");
-
-        Cookie emailCookie = new Cookie("Email", token.getEmail());
-        emailCookie.setMaxAge(20 * 60);
-        emailCookie.setHttpOnly(true);
-        emailCookie.setPath("/");
-
-        response.addCookie(tokenCookie);
-        response.addCookie(emailCookie);
-
-        response.sendRedirect("/static/create-account.html");
+        return responseBuilder.build();
     }
 
     @PostMapping("/register")
-    @Transactional
-    public ResponseEntity<String> Register(@Valid @RequestBody AuthRequest request, @CookieValue(name = "Token") String token,
-                                           @CookieValue(name = "Email") String email, HttpServletResponse response) {
-        EmailToken emailToken = emailTokenRepository.findBytoken(token);
-        EmailToken email2 = emailTokenRepository.findByEmail(email);
-        if (emailToken == null || email2 == null) {
+    public ResponseEntity<String> Register(@Valid @RequestBody AuthRequest request, @CookieValue(name = "Token") String tokenCookie,
+                                           @CookieValue(name = "Email") String emailCookie) {
+        if (!jwtService.ValidateCookies(tokenCookie,emailCookie)){
             return ResponseEntity.badRequest().build();
         }
-        if (emailToken.getExpiry().before(new Date())) {
-            return ResponseEntity.badRequest().build();
-        }
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        String password_hash = encoder.encode(request.password);
-        LocalDateTime localDateTime = LocalDateTime.now();
-        Date date = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
-
-        Users user = new Users(request.username, email, password_hash, date,RoleEnum.ROLE_USER);
-        userRepository.save(user);
+        authService.registerUser(request,emailCookie);
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/login")
-    @Transactional
-    public ResponseEntity<?> Authenticate(@RequestBody AuthRequest request, HttpServletResponse response) {
+    public ResponseEntity<?> Authenticate(@Valid @RequestBody AuthRequest request) {
 
-        try {
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.username, request.password));
-        } catch (AuthenticationException e) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        if (!authService.authenticateUser(request)){
+            return ResponseEntity.badRequest().build();
         }
-        String id = String.valueOf(userRepository.findByusername(request.username).get().getId());
-        UserDetails userDetails = userService.loadUserByUsername(request.username);
-        String token = jwtTokenUtils.generateJwtToken(userDetails, id);
-        Cookie cookie = new Cookie("JWT", token);
-        cookie.setHttpOnly(true);
-        cookie.setPath("/");
-        cookie.setMaxAge(24 * 60 * 60);
-        response.addCookie(cookie);
-        return ResponseEntity.ok().build();
+
+        UserAuthDto authDto = authService.getUserData(request);
+        ResponseCookie cookie = jwtService.AuthorizeUser(authDto);
+
+        var responseBuilder = ResponseEntity.status(HttpStatus.OK);
+
+        responseBuilder.header(HttpHeaders.SET_COOKIE, String.valueOf(cookie));
+
+        return responseBuilder.build();
     }
 }

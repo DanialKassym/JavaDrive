@@ -9,8 +9,7 @@ import com.example.JavaDrive.utils.JWTTokenUtils;
 import com.example.JavaDrive.web.service.infrastructure.StorageService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,14 +17,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.WebUtils;
 
-@AllArgsConstructor
 @RestController
-public class FileUploadController { private final StorageService storageService;
-    private final JWTTokenUtils jwtTokenUtils;
-    private final UploadFileRepository uploadFileRepository;
-    private final UserRepository userRepository;
-
-
+@RequiredArgsConstructor
+public class FileUploadController {
 
     @GetMapping("/dashboard")
     @Transactional
@@ -51,7 +45,7 @@ public class FileUploadController { private final StorageService storageService;
         return ResponseEntity.badRequest().build();
     }
 
-    @PostMapping("/upload")
+    /*@PostMapping("/upload")
     public ResponseEntity<String> handleFileUpload(@RequestParam("file") MultipartFile file,
                                                    HttpServletRequest request) {
         Cookie cookie = WebUtils.getCookie(request, "JWT");
@@ -68,12 +62,8 @@ public class FileUploadController { private final StorageService storageService;
         }
         return ResponseEntity.badRequest().build();
     }
-    @PostMapping("/hello")
-    public ResponseEntity<String> hello() {
-        return ResponseEntity.ok("hello");
-    }
     @ExceptionHandler(StorageFileNotFoundException.class)
     public ResponseEntity<?> handleStorageFileNotFound(StorageFileNotFoundException exc) {
         return ResponseEntity.notFound().build();
-    }
+    }*/
 }

@@ -28,10 +28,9 @@ public class SecurityConfig {
                 .cors((cors -> cors.disable()))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/static/home", "/static/upload.html").hasAuthority("USER_ROLE")
-                        .requestMatchers("/register","/login","/emailConfirmation",
-                                "/emailVerify/{emailToken}", "/swagger-ui/**", "/swagger-ui.html",
+                        .requestMatchers("/auth/**", "/swagger-ui/**", "/swagger-ui.html",
                                 "/swagger-resources/**", "/v3/api-docs/**",
-                                "/v3/api-docs/**","/static/**","/error","/favicon.ico","/test").permitAll()
+                                "/v3/api-docs/**","/static/**","/error","/favicon.ico").permitAll()
                         .requestMatchers("/dashboard","/upload").hasAuthority("USER_ROLE")
                         .anyRequest().authenticated()
                 )
