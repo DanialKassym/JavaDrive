@@ -1,28 +1,18 @@
 package com.example.JavaDrive.web.controller.api;
 
-import com.example.JavaDrive.domain.entity.UploadFile;
-import com.example.JavaDrive.domain.entity.Users;
-import com.example.JavaDrive.domain.repository.UploadFileRepository;
-import com.example.JavaDrive.domain.repository.UserRepository;
-import com.example.JavaDrive.exception.StorageFileNotFoundException;
-import com.example.JavaDrive.utils.JWTTokenUtils;
-import com.example.JavaDrive.web.service.infrastructure.StorageService;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.util.WebUtils;
 
-@RequestMapping("/dashboard")
+@RequestMapping("/api/v1/files")
 @RestController
 @RequiredArgsConstructor
-public class FileUploadController {
+public class UserFileController {
 
-    @GetMapping("/loadfiles")
+    @GetMapping("/dashboard")
     @Transactional
     public ResponseEntity<Resource> listUploadedFiles(HttpServletRequest request) {
         /* TODO to be implemented */
@@ -66,4 +56,10 @@ public class FileUploadController {
     public ResponseEntity<?> handleStorageFileNotFound(StorageFileNotFoundException exc) {
         return ResponseEntity.notFound().build();
     }*/
+
+    @DeleteMapping("/{fileId}")
+    public ResponseEntity<Void> deleteFile(@PathVariable Long fileId) {
+        // Логика удаления файла (с проверкой, принадлежит ли он пользователю)
+        return ResponseEntity.noContent().build();
+    }
 }

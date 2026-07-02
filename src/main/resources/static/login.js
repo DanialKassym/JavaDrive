@@ -8,7 +8,7 @@ async function Login() {
   };
 
   try {
-    const response = await fetch("/auth/login", {
+    const response = await fetch("/api/v1/auth/login", {
       method: "POST",
       credentials: 'include',
       headers: {

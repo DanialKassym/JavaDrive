@@ -28,7 +28,7 @@ async function fetchFiles() {
    // statusBox.textContent = "Loading...";
 
     try {
-        const response = await fetch("/dashboard", {
+        const response = await fetch("/api/v1/dashboard", {
             method: "GET",
             credentials: "include"
         });

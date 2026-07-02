@@ -27,29 +27,20 @@ public class SecurityConfig {
                 .csrf((csrf -> csrf.disable()))
                 .cors((cors -> cors.disable()))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(
-                                "/static/home",
-                                "/static/upload.html"
-                        ).hasAuthority("USER_ROLE")
+                        .requestMatchers("/static/home", "/static/upload.html").hasAuthority("USER_ROLE")
+
+                        .requestMatchers("/static/**", "/error", "/favicon.ico").permitAll()
 
                         .requestMatchers(
-                                "/static/**",
-                                "/error",
-                                "/favicon.ico"
-                        ).permitAll()
-
-                        .requestMatchers(
-                                "/auth/**",
                                 "/swagger-ui.html",
                                 "/swagger-ui/**",
                                 "/swagger-resources/**",
                                 "/v3/api-docs/**"
                         ).permitAll()
 
-                        .requestMatchers(
-                                "/dashboard/**",
-                                "/upload"
-                        ).hasAuthority("USER_ROLE")
+                        .requestMatchers("/api/v1/auth/**").permitAll()
+
+                        .requestMatchers("/api/v1/files/**").hasAuthority("USER_ROLE")
 
                         .anyRequest().authenticated()
                 )
