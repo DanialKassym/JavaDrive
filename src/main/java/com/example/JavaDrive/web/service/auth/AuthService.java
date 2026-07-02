@@ -10,7 +10,6 @@ import com.example.JavaDrive.web.dto.AuthRequest;
 import com.example.JavaDrive.web.dto.UserAuthDto;
 import com.example.JavaDrive.web.service.infrastructure.Email;
 import com.example.JavaDrive.web.service.user.UserService;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
