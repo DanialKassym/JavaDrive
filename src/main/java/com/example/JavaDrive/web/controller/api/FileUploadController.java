@@ -17,14 +17,14 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.WebUtils;
 
+@RequestMapping("/dashboard")
 @RestController
 @RequiredArgsConstructor
 public class FileUploadController {
 
-    @GetMapping("/dashboard")
+    @GetMapping("/loadfiles")
     @Transactional
     public ResponseEntity<Resource> listUploadedFiles(HttpServletRequest request) {
-        Cookie cookie = WebUtils.getCookie(request, "JWT");
         /* TODO to be implemented */
         /*if (cookie != null) {
             String token = cookie.getValue();

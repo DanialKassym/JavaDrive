@@ -27,11 +27,30 @@ public class SecurityConfig {
                 .csrf((csrf -> csrf.disable()))
                 .cors((cors -> cors.disable()))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/static/home", "/static/upload.html").hasAuthority("USER_ROLE")
-                        .requestMatchers("/auth/**", "/swagger-ui/**", "/swagger-ui.html",
-                                "/swagger-resources/**", "/v3/api-docs/**",
-                                "/v3/api-docs/**","/static/**","/error","/favicon.ico").permitAll()
-                        .requestMatchers("/dashboard","/upload").hasAuthority("USER_ROLE")
+                        .requestMatchers(
+                                "/static/home",
+                                "/static/upload.html"
+                        ).hasAuthority("USER_ROLE")
+
+                        .requestMatchers(
+                                "/static/**",
+                                "/error",
+                                "/favicon.ico"
+                        ).permitAll()
+
+                        .requestMatchers(
+                                "/auth/**",
+                                "/swagger-ui.html",
+                                "/swagger-ui/**",
+                                "/swagger-resources/**",
+                                "/v3/api-docs/**"
+                        ).permitAll()
+
+                        .requestMatchers(
+                                "/dashboard/**",
+                                "/upload"
+                        ).hasAuthority("USER_ROLE")
+
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)

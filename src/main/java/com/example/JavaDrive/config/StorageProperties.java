@@ -1,28 +1,15 @@
 package com.example.JavaDrive.config;
 
+import lombok.Getter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
+@Getter
 @ConfigurationProperties(prefix = "storage")
 public class StorageProperties {
 
-    private String windowsLocation = "C:\\IntellijProjects\\JavaDrive\\files";
+    private final String windowsLocation = "C:\\IntellijProjects\\JavaDrive\\files";
 
-    private String linuxLocation = "/tmp/files";
+    private final String linuxLocation = "/tmp/files";
 
-    public String getLinuxLocation() {
-        return linuxLocation;
-    }
-
-    public void setLinuxLocation(String linuxLocation) {
-        this.linuxLocation = linuxLocation;
-    }
-
-    public String getWindowsLocation() {
-        return windowsLocation;
-    }
-
-    public void setWindowsLocation(String windowsLocation) {
-        this.windowsLocation = windowsLocation;
-    }
 
 }
