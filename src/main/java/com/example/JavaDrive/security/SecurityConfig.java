@@ -27,7 +27,7 @@ public class SecurityConfig {
                 .csrf((csrf -> csrf.disable()))
                 .cors((cors -> cors.disable()))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/static/home", "/static/upload.html").hasAuthority("USER_ROLE")
+                        .requestMatchers("/static/home", "/static/upload.html").hasAuthority("ROLE_USER")
 
                         .requestMatchers("/static/**", "/error", "/favicon.ico").permitAll()
 
@@ -40,7 +40,7 @@ public class SecurityConfig {
 
                         .requestMatchers("/api/v1/auth/**").permitAll()
 
-                        .requestMatchers("/api/v1/files/**").hasAuthority("USER_ROLE")
+                        .requestMatchers("/api/v1/files/**").hasAuthority("ROLE_USER")
 
                         .anyRequest().authenticated()
                 )

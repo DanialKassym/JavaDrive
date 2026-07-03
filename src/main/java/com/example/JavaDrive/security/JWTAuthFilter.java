@@ -7,6 +7,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,7 +20,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-public class JWTAuthFilter  extends OncePerRequestFilter {
+public class JWTAuthFilter extends OncePerRequestFilter {
 
     private final JWTTokenUtils jwtTokenUtils;
     @Autowired
@@ -28,9 +29,9 @@ public class JWTAuthFilter  extends OncePerRequestFilter {
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request,
-                                    HttpServletResponse response,
-                                    FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(@NonNull HttpServletRequest request,
+                                    @NonNull HttpServletResponse response,
+                                    @NonNull FilterChain filterChain) throws ServletException, IOException {
 
         Cookie cookie = WebUtils.getCookie(request, "JWT");
 

@@ -41,3 +41,11 @@ dependencies {
 tasks.withType<Test> {
 	useJUnitPlatform()
 }
+
+tasks.withType<JavaExec>().configureEach {
+	jvmArgs("--add-opens", "java.base/java.nio=ALL-UNNAMED")
+}
+
+tasks.withType<Test>().configureEach {
+	jvmArgs("--add-opens", "java.base/java.nio=ALL-UNNAMED")
+}
