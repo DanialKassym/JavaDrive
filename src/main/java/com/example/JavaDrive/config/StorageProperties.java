@@ -8,8 +8,4 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class StorageProperties {
 
     private final String windowsLocation = "C:\\IntellijProjects\\JavaDrive\\files";
-
-    private final String linuxLocation = "/tmp/files";
-
-
 }

@@ -20,20 +20,24 @@ public class UploadFile {
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private Long id;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "owner_id", nullable = false)
+    private Users owner;
+
     @Column(nullable = false, unique = true)
-    private String file_name;
+    private String original_name;
+
+    @Column(nullable = false, unique = true)
+    private String storage_name;
 
     @Column(nullable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     @CreationTimestamp
     private Date created_at;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "owner_id", nullable = false)
-    private Users owner;
-
-    public UploadFile(String file_name, Users owner) {
-        this.file_name = file_name;
+    public UploadFile(Users owner, String original_name, String storage_name) {
         this.owner = owner;
+        this.original_name = original_name;
+        this.storage_name = storage_name;
     }
 }

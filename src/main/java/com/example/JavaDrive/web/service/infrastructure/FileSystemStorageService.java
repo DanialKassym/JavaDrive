@@ -16,45 +16,31 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.Objects;
 
 @Service
-public class FileSystemStorageService implements StorageService {
+public class FileSystemStorageService {
 
     private final Path rootLocation;
 
     @Autowired
     public FileSystemStorageService(StorageProperties properties) {
-        String os = System.getProperty("os.name");
-        if (os.contains("win")) {
-            if (properties.getWindowsLocation().trim().isEmpty()) {
-                throw new StorageException("File upload location can not be Empty.");
-            }
-            this.rootLocation = Paths.get(properties.getWindowsLocation());
-        } else {
-            if (properties.getLinuxLocation().trim().isEmpty()) {
-
-                throw new StorageException("File upload location can not be Empty.");
-            }
-            this.rootLocation = Paths.get(properties.getLinuxLocation());
-        }
-
+        this.rootLocation = Paths.get(properties.getWindowsLocation());
         init();
     }
 
-    @Override
-    public void store(MultipartFile file) {
+    public void store(MultipartFile file, String safeInternalName, String id) {
         try {
             if (file.isEmpty()) {
                 throw new StorageException("Failed to store empty file.");
             }
-            Path destinationFile = this.rootLocation.resolve(
-                            Paths.get(Objects.requireNonNull(file.getOriginalFilename())))
-                    .normalize().toAbsolutePath();
-            if (!destinationFile.getParent().equals(this.rootLocation.toAbsolutePath())) {
-                // This is a security check
-                throw new StorageException(
-                        "Cannot store file outside current directory.");
+            Path userDirectory = this.rootLocation.resolve("user_" + id).normalize().toAbsolutePath();
+
+            Files.createDirectories(userDirectory);
+
+            Path destinationFile = userDirectory.resolve(Paths.get(safeInternalName)).normalize().toAbsolutePath();
+
+            if (!destinationFile.getParent().equals(userDirectory)) {
+                throw new StorageException("Cannot store file outside user directory.");
             }
             try (InputStream inputStream = file.getInputStream()) {
                 Files.copy(inputStream, destinationFile,
@@ -64,13 +50,10 @@ public class FileSystemStorageService implements StorageService {
             throw new StorageException("Failed to store file.", e);
         }
     }
-
-    @Override
     public Path load(String filename) {
         return rootLocation.resolve(filename);
     }
 
-    @Override
     public Resource loadAsResource(String filename) {
         try {
             Path file = load(filename);
@@ -87,7 +70,6 @@ public class FileSystemStorageService implements StorageService {
         }
     }
 
-    @Override
     public void init() {
         try {
             Files.createDirectories(rootLocation);

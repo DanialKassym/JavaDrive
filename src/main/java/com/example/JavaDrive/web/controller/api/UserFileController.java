@@ -1,20 +1,22 @@
 package com.example.JavaDrive.web.controller.api;
 
-import jakarta.servlet.http.HttpServletRequest;
+import com.example.JavaDrive.exception.StorageFileNotFoundException;
+import com.example.JavaDrive.web.service.upload.FileUploadService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RequestMapping("/api/v1/files")
 @RestController
 @RequiredArgsConstructor
 public class UserFileController {
-
+    private final FileUploadService fileUploadService;
     @GetMapping("/dashboard")
     @Transactional
-    public ResponseEntity<Resource> listUploadedFiles(HttpServletRequest request) {
+    public ResponseEntity<Resource> listUploadedFiles(@CookieValue(name = "JWT") String cookie) {
         /* TODO to be implemented */
         /*if (cookie != null) {
             String token = cookie.getValue();
@@ -32,34 +34,26 @@ public class UserFileController {
                 }
             }
         }*/
+
         return ResponseEntity.badRequest().build();
     }
 
-    /*@PostMapping("/upload")
+    @PostMapping("/upload")
     public ResponseEntity<String> handleFileUpload(@RequestParam("file") MultipartFile file,
-                                                   HttpServletRequest request) {
-        Cookie cookie = WebUtils.getCookie(request, "JWT");
-
-        if (cookie != null) {
-            String token = cookie.getValue();
-            if (jwtTokenUtils.validateToken(token)) {
-                String id = jwtTokenUtils.getID(token);
-                Users user = userRepository.findByid(Long.valueOf(id));
-                storageService.store(file);
-                uploadFileRepository.save(new UploadFile(file.getOriginalFilename(), user));
-                return ResponseEntity.ok().build();
-            }
+                                                   @CookieValue(name = "JWT") String cookie) {
+        if (!fileUploadService.UploadUserFile(file,cookie)){
+            return ResponseEntity.badRequest().build();
         }
-        return ResponseEntity.badRequest().build();
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/{fileId}")
+    public ResponseEntity<Void> deleteFile(@PathVariable Long fileId,@CookieValue(name = "JWT") String cookie) {
+        return ResponseEntity.noContent().build();
     }
     @ExceptionHandler(StorageFileNotFoundException.class)
     public ResponseEntity<?> handleStorageFileNotFound(StorageFileNotFoundException exc) {
         return ResponseEntity.notFound().build();
-    }*/
-
-    @DeleteMapping("/{fileId}")
-    public ResponseEntity<Void> deleteFile(@PathVariable Long fileId) {
-        // Логика удаления файла (с проверкой, принадлежит ли он пользователю)
-        return ResponseEntity.noContent().build();
     }
+
 }
