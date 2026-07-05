@@ -5,30 +5,10 @@ const searchInput = document.getElementById("searchInput");
 let allFiles = [];
 let currentFilter = "all";
 
-/*
-Expected backend response example:
-
-GET /api/files
-
-[
-  {
-    "id": 1,
-    "name": "Homework.pdf",
-    "type": "file"
-  },
-  {
-    "id": 2,
-    "name": "Photos",
-    "type": "folder"
-  }
-]
-*/
 
 async function fetchFiles() {
-   // statusBox.textContent = "Loading...";
-
     try {
-        const response = await fetch("/api/v1/dashboard", {
+        const response = await fetch("/api/v1/files/dashboard", {
             method: "GET",
             credentials: "include"
         });
@@ -36,17 +16,20 @@ async function fetchFiles() {
         if (!response.ok) {
             throw new Error("Server error: " + response.status);
         }
+         const rawText = await response.text();
 
-        const data = await response.json();
+         const data = JSON.parse(rawText);
 
-        allFiles = data;
-        //renderFiles();
+        allFiles = data.map(file => ({
+            id: file.id,
+            name: file.original || "Unnamed File",
+            type: file.type || "file"
+        }));
 
-        //statusBox.textContent = "";
+        renderFiles();
 
     } catch (error) {
-        //statusBox.textContent = "Failed to load files.";
-        console.error(error);
+        console.error("Dashboard load failed:", error);
     }
 }
 
@@ -58,8 +41,7 @@ function renderFiles() {
         return file.type === currentFilter;
     });
 
-    let search = searchInput.value.toLowerCase();
-
+    let search = searchInput ? searchInput.value.toLowerCase() : "";
     filtered = filtered.filter(file =>
         file.name.toLowerCase().includes(search)
     );
@@ -79,40 +61,20 @@ function renderFiles() {
         `;
 
         div.onclick = () => openFile(file);
-
         filesContainer.appendChild(div);
     });
 }
 
 function openFile(file) {
     if (file.type === "folder") {
-        // placeholder for folder navigation
         console.log("Open folder:", file.id);
     } else {
-        // browser-native rendering
-        window.open("/api/files/" + file.id, "_blank");
+        window.open("/api/v1/files/" + file.id, "_blank");
     }
 }
 
-function filterFiles(type) {
-    currentFilter = type;
-    renderFiles();
+if (searchInput) {
+    searchInput.addEventListener("input", renderFiles);
 }
 
-
-/* Events */
-
-//document.getElementById("newBtn").onclick = addFile;
-
-document.querySelectorAll(".menu div").forEach(item => {
-    item.onclick = () => {
-        currentFilter = item.dataset.filter;
-        renderFiles();
-    };
-});
-
-//searchInput.addEventListener("input", renderFiles);
-
-/* Init */
-
-document.addEventListener('DOMContentLoaded', fetchFiles());
+document.addEventListener('DOMContentLoaded', fetchFiles);
