@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 public class JWTAuthFilter extends OncePerRequestFilter {
 
     private final JWTTokenUtils jwtTokenUtils;
+
     @Autowired
     public JWTAuthFilter(JWTTokenUtils jwtTokenUtils) {
         this.jwtTokenUtils = jwtTokenUtils;
@@ -35,20 +36,18 @@ public class JWTAuthFilter extends OncePerRequestFilter {
 
         Cookie cookie = WebUtils.getCookie(request, "JWT");
 
-        if (cookie != null) {
+        if (cookie != null && jwtTokenUtils.validateToken(cookie.getValue())) {
             String token = cookie.getValue();
-
-            if (jwtTokenUtils.validateToken(token)) {
-                String username = jwtTokenUtils.getUsername(token);
-                List<String> roles = jwtTokenUtils.getRoles(token);
-                List<SimpleGrantedAuthority> authorities = roles.stream()
-                        .map(role -> new SimpleGrantedAuthority(role))
-                        .collect(Collectors.toList());
-                UsernamePasswordAuthenticationToken auth =
-                        new UsernamePasswordAuthenticationToken(username, token, authorities);
-                SecurityContextHolder.getContext().setAuthentication(auth);
-            }
+            String username = jwtTokenUtils.getUsername(token);
+            List<String> roles = jwtTokenUtils.getRoles(token);
+            List<SimpleGrantedAuthority> authorities = roles.stream()
+                    .map(role -> new SimpleGrantedAuthority(role))
+                    .collect(Collectors.toList());
+            UsernamePasswordAuthenticationToken auth =
+                    new UsernamePasswordAuthenticationToken(username, token, authorities);
+            SecurityContextHolder.getContext().setAuthentication(auth);
         }
+
 
         filterChain.doFilter(request, response);
     }
