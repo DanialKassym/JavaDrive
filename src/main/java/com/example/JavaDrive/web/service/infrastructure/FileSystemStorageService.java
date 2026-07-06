@@ -47,7 +47,7 @@ public class FileSystemStorageService {
                         StandardCopyOption.REPLACE_EXISTING);
             }
         } catch (IOException e) {
-            throw new StorageException("Failed to store file.", e);
+            throw new StorageException("Failed to store file.");
         }
     }
     public Path load(String filename) {
@@ -66,7 +66,7 @@ public class FileSystemStorageService {
 
             }
         } catch (MalformedURLException e) {
-            throw new StorageFileNotFoundException("Could not read file: " + filename, e);
+            throw new StorageFileNotFoundException("Could not read file: " + filename);
         }
     }
 
@@ -74,7 +74,7 @@ public class FileSystemStorageService {
         try {
             Files.createDirectories(rootLocation);
         } catch (IOException e) {
-            throw new StorageException("Could not initialize storage", e);
+            throw new StorageException("Could not initialize storage");
         }
     }
 
