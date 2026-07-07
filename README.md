@@ -2,8 +2,8 @@
 
 A backend file storage service built with Spring Boot that provides authenticated file management for individual users. The application combines JWT-based authentication, email verification, and persistent file storage behind a REST API with a minimal static web interface.
 
-![Java](https://img.shields.io/badge/Java-25-blue)
-![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.4.0-6DB33F)
+![Java](https://img.shields.io/badge/Java-21-blue)
+![Spring Boot](https://img.shields.io/badge/Spring_Boot-4.1.0-6DB33F)
 ![Gradle](https://img.shields.io/badge/Gradle-Kotlin_DSL-02303A)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-42.7.7-4169E1)
 ![Spring Security](https://img.shields.io/badge/Spring_Security-Enabled-6DB33F)
@@ -73,16 +73,16 @@ JavaDrive/
 
 The project is configured with the following runtime requirements:
 
-| Dependency | Version |
-|------------|---------|
-| Java | **25** (Gradle Toolchain) |
-| Spring Boot | 3.4.0 |
-| Gradle | Wrapper Included |
-| PostgreSQL | Required |
+| Dependency | Version                         |
+|------------|---------------------------------|
+| Java | **21** (Gradle Toolchain)       |
+| Spring Boot | 4.1.0                           |
+| Gradle | Wrapper Included                |
+| PostgreSQL | Required                        |
 | SMTP Server | Required for email verification |
 
 > [IMPORTANT]
-> Java 25 is explicitly configured in `build.gradle.kts`. Ensure your JDK matches the configured toolchain.
+> Java 21 is explicitly configured in `build.gradle.kts`. Ensure your JDK matches the configured toolchain.
 
 ---
 
@@ -148,7 +148,7 @@ java -jar build/libs/JavaDrive-0.0.1-SNAPSHOT.jar
 curl \
   --cookie "JWT=<your-jwt-cookie>" \
   -F "file=@document.pdf" \
-  http://localhost:8081/api/v1/files/upload
+  http://localhost:8080/api/v1/files/upload
 ```
 
 ---
@@ -158,7 +158,7 @@ curl \
 ```bash
 curl \
   --cookie "JWT=<your-jwt-cookie>" \
-  http://localhost:8081/api/v1/files/dashboard
+  http://localhost:8080/api/v1/files/dashboard
 ```
 
 ---
@@ -168,7 +168,7 @@ curl \
 ```bash
 curl \
   --cookie "JWT=<your-jwt-cookie>" \
-  http://localhost:8081/api/v1/files/1 \
+  http://localhost:8080/api/v1/files/1 \
   --output downloaded-file
 ```
 
