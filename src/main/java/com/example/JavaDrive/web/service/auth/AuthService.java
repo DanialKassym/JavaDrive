@@ -43,7 +43,7 @@ public class AuthService {
             return false;
         }
         String uuid = UUID.randomUUID().toString();
-        String link = "http://localhost:8081/api/v1/auth/emailVerify/" + uuid;
+        String link = "http://localhost:8080/api/v1/auth/emailVerify/" + uuid;
         Date expiryDate = new Date(System.currentTimeMillis() + 15 * 60 * 1000);
         emailTokenRepository.save(new EmailToken(uuid, userEmail, expiryDate, false));
         emailSender.sendSimpleEmail(userEmail, link);

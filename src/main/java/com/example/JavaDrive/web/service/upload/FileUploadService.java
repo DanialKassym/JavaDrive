@@ -5,6 +5,7 @@ import com.example.JavaDrive.domain.entity.Users;
 import com.example.JavaDrive.domain.repository.UploadFileRepository;
 import com.example.JavaDrive.domain.repository.UserRepository;
 import com.example.JavaDrive.exception.FileNotFoundOnDiskException;
+import com.example.JavaDrive.exception.ForbbidenException;
 import com.example.JavaDrive.exception.ResourceNotFoundException;
 import com.example.JavaDrive.utils.JWTTokenUtils;
 import com.example.JavaDrive.web.dto.FileDownloadDetails;
@@ -64,6 +65,23 @@ public class FileUploadService {
                     .collect(Collectors.toList());
         }
         return java.util.Collections.emptyList();
+    }
+
+    public void validateCookie(Long owner_id, String cookie) {
+
+        if (cookie == null || !jwtTokenUtils.validateToken(cookie)) {
+            throw new ForbbidenException("Invalid or missing token");
+        }
+
+        String tokenIdStr = jwtTokenUtils.getID(cookie);
+        if (tokenIdStr == null) {
+            throw new ForbbidenException("Token does not contain a valid ID");
+        }
+        Long id = Long.valueOf(tokenIdStr);
+
+        if (!Objects.equals(owner_id, id)) {
+            throw new ForbbidenException("User requested file doesn't match owner id");
+        }
     }
 
     public FileDownloadDetails getFileForDownload(Long id) {

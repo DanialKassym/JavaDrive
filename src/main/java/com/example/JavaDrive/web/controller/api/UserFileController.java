@@ -38,6 +38,7 @@ public class UserFileController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Resource> returnUserFile(@PathVariable Long id,@CookieValue(name = "JWT") String cookie,HttpServletResponse response) {
+        fileUploadService.validateCookie(id,cookie);
         FileDownloadDetails details = fileUploadService.getFileForDownload(id);
         Resource resource = details.getResource();
 
